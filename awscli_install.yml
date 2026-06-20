@@ -13,7 +13,7 @@
     aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
     aws configure set default.region us-east-1
 
-- name: set aws cli auto-prompt
+- name: set aws cli auto-prompt as partial
   run: |
     aws configure set cli_auto_prompt partial
     aws configure set cli_auto_prompt_mode partial
