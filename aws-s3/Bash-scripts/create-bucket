@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+
+# check if the bucket name is provided
+# $1 takes bucket name entered 
+
+if [ -z "$1" ]; then
+    echo "No Bucket name provided."
+    exit 1
+fi
+
+aws s3api create-bucket --bucket $1 --query Location --output text

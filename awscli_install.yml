@@ -15,5 +15,10 @@
 
 - name: set aws cli auto-prompt
   run: |
-    aws configure set cli_auto_prompt partial
-    aws configure set cli_auto_prompt_mode partial
+    aws configure set cli_auto_prompt on-partial
+
+- name: Install Utilities
+  run: |
+    sudo apt-get update
+    sudo apt-get install -y tree
+    sudo apt-get install -y jq

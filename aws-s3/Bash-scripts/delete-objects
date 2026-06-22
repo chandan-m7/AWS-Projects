@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+echo "================ S3 Delete Objects ================"
+
+# Check bucket name
+if [[ -z "${1:-}" ]]; then
+    echo "Usage: $0 <bucket-name>"
+    exit 1
+fi
+
+BUCKET="$1"
+
+echo "Bucket: $BUCKET"
+echo ""
+echo "Choose delete option:"
+echo "1) Delete single file"
+echo "2) Delete folder (prefix)"
+echo "3) Delete ALL objects in bucket"
+echo ""
+
+read -rp "Enter choice (1/2/3): " choice
+
+delete_object() {
+    local key="$1"
+    echo "Deleting: $key"
+    aws s3api delete-object --bucket "$BUCKET" --key "$key"
+}
+
+case "$choice" in
+
+    1)
+        read -rp "Enter full object key (file name): " key
+        delete_object "$key"
+        ;;
+
+    2)
+        read -rp "Enter folder prefix (e.g. logs/): " prefix
+
+        echo "Deleting all objects under: $prefix"
+
+        aws s3api list-objects-v2 \
+            --bucket "$BUCKET" \
+            --prefix "$prefix" \
+            --query 'Contents[].Key' \
+            --output text | tr '\t' '\n' | while read -r key; do
+
+            [[ -n "$key" ]] && delete_object "$key"
+        done
+        ;;
+
+    3)
+        echo "WARNING: This will delete EVERYTHING in $BUCKET"
+        read -rp "Type YES to continue: " confirm
+
+        if [[ "$confirm" != "YES" ]]; then
+            echo "Aborted."
+            exit 0
+        fi
+
+        aws s3api list-objects-v2 \
+            --bucket "$BUCKET" \
+            --query 'Contents[].Key' \
+            --output text | tr '\t' '\n' | while read -r key; do
+
+            [[ -n "$key" ]] && delete_object "$key"
+        done
+        ;;
+
+    *)
+        echo "Invalid option"
+        exit 1
+        ;;
+esac
+
+echo "Done."

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+echo "================ Listing buckets ======================"
+# jq is used to get results how we want by filtering JSON
+aws s3api list-buckets | jq -r '.Buckets |sort_by(.CreationDate) | .[] | .Name'
+
+echo "================ newest bucket created ================"
+aws s3api list-buckets | jq -r '.Buckets |sort_by(.CreationDate) | reverse | .[0] | .Name'

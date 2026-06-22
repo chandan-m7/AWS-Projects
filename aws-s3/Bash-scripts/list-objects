@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# check if the bucket name is provided
+# $1 takes bucket name entered
+
+if [ -z "$1" ]; then
+    echo "No Bucket name provided."
+    exit 1
+fi
+
+aws s3api list-objects-v2 --bucket $1
