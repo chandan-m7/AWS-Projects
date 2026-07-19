@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+echo "============= Deploy Stack via CloudFormation ================"
+
+STACK_NAME="Cfn-s3-simple-create"
+
+aws cloudformation deploy \
+--template-file TemplateS3.yaml \
+--region us-east-1 \
+--no-execute-changeset \
+--stack-name $STACK_NAME

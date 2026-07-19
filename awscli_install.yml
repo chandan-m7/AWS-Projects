@@ -34,3 +34,4 @@
     rm packages-microsoft-prod.deb
     # pwsh
     # Install-Module -Name AWS.Tools.Installer
+    # Install-AWSToolsModule AWS.Tools.S3
